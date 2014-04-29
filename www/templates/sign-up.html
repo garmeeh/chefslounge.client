@@ -1,0 +1,35 @@
+<ion-view title="Chefs Lounge">
+  <ion-content padding="true">
+    <form novalidate class="css-form">        
+        <div class="list">
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">First Name</span>
+            <input type="text" placeholder="Joe" ng-model="user.firstname">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Last Name</span>
+            <input type="text" placeholder="Bloggs" ng-model="user.lastname">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Email</span>
+            <input type="email" placeholder="joeb@wit.com" ng-model="user.email">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Password</span>
+            <input type="password" ng-model="user.password">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Confirm Password</span>
+            <input type="password" ng-model="user.passwordconfirm">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Date of Birth</span>
+            <input type="date" ng-model="user.dob">
+          </label>
+          
+          <button class="button button-block button-dark" ng-click="signUp(user)">Create Account</button>
+
+        </div>
+    </form>
+  </ion-content>
+</ion-view>

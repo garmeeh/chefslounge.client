@@ -1,0 +1,16 @@
+/* Your app's CSS, go crazy, make it your own */
+
+.ionic-logo {
+  display: block;
+  margin: 15px auto;
+  width: 96px;
+  height: 96px;
+}
+.eighty-w{
+	/*margin-top: 48px !important;*/
+	width: 80%;
+	margin: 0 auto;
+}
+.eighty-w h1{
+	text-align: center;
+}

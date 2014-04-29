@@ -1,0 +1,26 @@
+<ion-view title="Book">
+  <ion-content class="has-header padding">
+    <form name="reviewform" id="reviewform1" ng-submit="booktableFn()"> 
+      <ion-list>
+        <label class="item item-input">
+          <span class="input-label">Date</span>
+          <input type="date" ng-model="bookInput.bookingdate">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Time</span>
+          <input type="time" ng-model="bookInput.bookingtime">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">No. of Guests</span>
+          <input type="number" ng-model="bookInput.bookingguests">
+        </label>
+
+        <button type="submit" class="button button-dark button-block"  >Book Table</button>
+      </ion-list>
+    </form>
+
+
+  </ion-content>
+</ion-view>

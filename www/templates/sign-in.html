@@ -1,0 +1,75 @@
+<ion-view title="Chefs Lounge">
+  <ion-content has-header="true" padding="true">
+
+  <div class="list">    
+    <label class="item item-input">
+        <span class="input-label">Email</span>
+        <input type="email" ng-model="user.email"> 
+      </label>
+
+      <label class="item item-input">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="user.password">
+      </label>
+  </div>
+  
+  <div class="padding">
+    <button class="button button-block button-dark" ng-click="signIn(user)">Sign-In</button>
+      <a href="#/forgot-password" class="button button-block button-dark">Forgot password</a></p>
+      <button class="button button-block button-dark" ng-click="newUser()">New user</button>
+  </div>
+
+  </ion-content>
+ <!-- New User Modal 
+ ==================================================-->
+<script id="new-user.html" type="text/ng-template">
+
+  <div class="modal">
+
+    <!-- Modal header bar -->
+    <ion-header-bar class="bar-dark nav-title-slide-ios7">
+      <h1 class="title">New User</h1>
+      <button class="button button-clear button-light" ng-click="closeNewUser()">Cancel</button>
+    </ion-header-bar>
+
+    <!-- Modal content area -->
+    <ion-content>
+      <form name="createUserForm" ng-submit="createUser(user)">
+        <div class="list">
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">First Name</span>
+            <input type="text" placeholder="Joe" ng-model="user.firstname">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Last Name</span>
+            <input type="text" placeholder="Bloggs" ng-model="user.lastname">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Email</span>
+            <input type="email" placeholder="joeb@wit.com" ng-model="user.email">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Password</span>
+            <input type="password" ng-model="user.password">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Confirm Password</span>
+            <input type="password" ng-model="user.passwordconfirm">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Date of Birth</span>
+            <input type="date" ng-model="user.dob">
+          </label>
+          
+          <button type="submit" class="button button-block button-dark">Create User</button>
+        </div>
+      </form>
+    </ion-content>
+  </div>
+</script>
+
+
+
+
+
+</ion-view>
