@@ -1,4 +1,4 @@
-Chefs Lounge || Admin
+Chefs Lounge || Client
 ==========================
 
 College Project
