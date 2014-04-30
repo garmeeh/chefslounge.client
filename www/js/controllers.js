@@ -15,15 +15,42 @@ chefslounge.controller('HomeCtrl', ['$scope', '$state',
 	}
 ])
 
+
+//Removed due to apple ui guidelines
+// chefslounge.controller('StatusCtrl', ['$scope', '$ionicPlatform',
+// 	function($scope, $ionicPlatform) {
+// 		$ionicPlatform.ready(function() {
+// 			ionic.Platform.fullScreen();
+// 			if (window.StatusBar) {
+// 				return StatusBar.hide();
+// 			}
+// 		});
+
+// 	}
+// ])
+
+
 .controller('OfferCtrl', function($scope) {})
 
-chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$templateCache',
-	function($scope, $http, $templateCache) {
+chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', '$templateCache',
+	function($scope, $http, $state, $templateCache) {
 		$scope.enquiry = {};
 
 		$scope.enquiryFn = function() {
 			console.log(JSON.stringify($scope.enquiry));
+			$scope.msgsent();
 		}
+
+		//=== Review Submitted Confirmation ====\\
+		$scope.msgsent = function() {
+			console.log("msgsent");
+			$state.go('tab.home', {}, {
+				reload: true,
+				inherit: false
+			});
+		};
+
+
 
 	}
 ])
@@ -141,8 +168,8 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 // === BookingCtrl
 // =======================================================//
-chefslounge.controller('BookCtrl', ['$scope', '$http', '$templateCache',
-	function($scope, $http, $templateCache) {
+chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', '$templateCache',
+	function($scope, $http, $state, $templateCache) {
 		$scope.bookInput = {};
 
 
@@ -165,6 +192,7 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$templateCache',
 			}).
 			success(function(response) {
 				console.log("success", response);
+				$scope.booked();
 
 			}).
 			error(function(response) {
@@ -177,8 +205,14 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$templateCache',
 		};
 
 
+
+		//=== Booking Submitted Confirmation ====\\
 		$scope.booked = function() {
 			console.log("booked");
+			$state.go('tab.home', {}, {
+				reload: true,
+				inherit: false
+			});
 		};
 
 
