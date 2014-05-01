@@ -14,40 +14,87 @@ chefslounge.controller('HomeCtrl', ['$scope', '$state',
 
 	}
 ])
+chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$templateCache',
+	function($scope, $http, $state, $templateCache) {
+
+		//=== getOfferFn() ====\\
+
+		$scope.getOfferFn = function() {
+			// on refactore move var direct.
+			var method = 'GET';
+			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/getoffer';
+			$scope.codeStatus = "";
+			console.log('Hit Function getOfferFn');
 
 
-//Removed due to apple ui guidelines
-// chefslounge.controller('StatusCtrl', ['$scope', '$ionicPlatform',
-// 	function($scope, $ionicPlatform) {
-// 		$ionicPlatform.ready(function() {
-// 			ionic.Platform.fullScreen();
-// 			if (window.StatusBar) {
-// 				return StatusBar.hide();
-// 			}
-// 		});
+			$http({
+				method: method,
+				url: inserturl,
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				cache: $templateCache
+			}).
+			success(function(response) {
+				console.log(response);
+				$scope.offers = response;
 
-// 	}
-// ])
 
 
-.controller('OfferCtrl', function($scope) {})
+			}).
+			error(function(response) {
+				console.log("error");
+				$scope.codeStatus = response || "Request failed";
+				console.log($scope.codeStatus);
+			});
+
+			return false;
+		};
+
+		$scope.getOfferFn();
+	}
+])
+
 
 chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', '$templateCache',
 	function($scope, $http, $state, $templateCache) {
-		$scope.enquiry = {};
+		// $scope.enquiry = {};
 
-		$scope.enquiryFn = function() {
-			console.log(JSON.stringify($scope.enquiry));
-			$scope.msgsent();
-		}
+		$scope.enquiryFn = function(data) {
 
-		//=== Review Submitted Confirmation ====\\
-		$scope.msgsent = function() {
-			console.log("msgsent");
-			$state.go('tab.home', {}, {
-				reload: true,
-				inherit: false
+			console.log('Hit enquiry');
+			var enquiry = 'enquiry=' + JSON.stringify(data);
+			console.log(enquiry);
+			var method = 'POST';
+			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/sendmsg';
+			$scope.codeStatus = "";
+
+			$http({
+				method: method,
+				url: inserturl,
+				data: enquiry,
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				cache: $templateCache
+			}).
+			success(function(response) {
+				console.log("success", response);
+				$state.go('tab.home', {}, {
+					reload: true,
+					inherit: false
+				});
+
+
+			}).
+			error(function(response) {
+				console.log("error");
+				$scope.codeStatus = response || "Request failed";
+				console.log($scope.codeStatus);
 			});
+
+			// return false;
+
 		};
 
 
@@ -269,6 +316,49 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', '$templateCac
 			});
 		};
 
+
+
+	}
+])
+// === ViewReviewCtrl
+// =======================================================//
+chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$templateCache',
+	function($scope, $http, $state, $templateCache) {
+		//=== getReviewFn() ====\\
+
+		$scope.getReviewFn = function() {
+			// on refactore move var direct.
+			var method = 'GET';
+			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/getreview';
+			$scope.codeStatus = "";
+			console.log('Hit Function getReviewFn');
+
+
+			$http({
+				method: method,
+				url: inserturl,
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				cache: $templateCache
+			}).
+			success(function(response) {
+				console.log(response);
+				$scope.reviews = response;
+
+
+
+			}).
+			error(function(response) {
+				console.log("error");
+				$scope.codeStatus = response || "Request failed";
+				console.log($scope.codeStatus);
+			});
+
+			return false;
+		};
+
+		$scope.getReviewFn();
 
 
 	}

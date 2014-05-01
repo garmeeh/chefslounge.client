@@ -63,12 +63,12 @@ chefslounge.config(function($stateProvider, $urlRouterProvider) {
         }
     })
 
-    .state('tab.profile', {
-        url: '/home/profile',
+    .state('tab.viewreviews', {
+        url: '/home/viewreviews',
         views: {
             'tab-home': {
-                templateUrl: 'templates/profile.html',
-                controller: 'ProfileCtrl'
+                templateUrl: 'templates/view-reviews.html',
+                controller: 'ViewReviewCtrl'
             }
         }
     })

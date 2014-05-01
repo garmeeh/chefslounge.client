@@ -1,5 +1,11 @@
-<ion-view title="Offer">
-  <ion-content has-header="true" padding="true">
-  <h1> Test </h1>
+<ion-view title="Special Offers">
+  <ion-content class="has-header padding">
+    <ion-list>
+  <ion-item ng-repeat="offer in offers">
+    <h2>{{offer.title}}</h2>
+    <p>{{offer.message}}</p>
+    <p><b>Expires:</b> {{offer.expire}}</p>
+  </ion-item>
+</ion-list>
   </ion-content>
 </ion-view>

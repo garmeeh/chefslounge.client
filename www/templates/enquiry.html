@@ -1,6 +1,6 @@
 <ion-view title="Enquiry">
   <ion-content has-header="true" padding="true">
-  <form id="enquiryForm" ng-submit="enquiryFn()">
+  <form id="enquiryForm" ng-submit="enquiryFn(enquiry)">
       	<div class="list">
 
           <label class="item item-input item-stacked-label">
@@ -16,6 +16,7 @@
                     maxlength="240">
           </textarea>
         </label>
+        <!-- <input type="hidden" value="Joe Bloggs" ng-model="enquiry.name" /> -->
           
           <button type="submit" class="button button-dark button-block"  >Send</button>
           
