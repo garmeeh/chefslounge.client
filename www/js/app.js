@@ -72,6 +72,16 @@ chefslounge.config(function($stateProvider, $urlRouterProvider) {
             }
         }
     })
+
+    .state('tab.logout', {
+        url: '/home/logout',
+        views: {
+            'tab-home': {
+                templateUrl: 'templates/log-out.html',
+                // controller: 'ViewReviewCtrl'
+            }
+        }
+    })
     // End of sub tabs =============//
 
 

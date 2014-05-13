@@ -1,4 +1,4 @@
-<ion-view title="View Reviews">
+<ion-view title="Reviews">
   <ion-content has-header="true" padding="true">
   <ion-list>
     <div class="item-container">
@@ -11,9 +11,13 @@
         	</div>
 
         	<div class="review-data">
-	        	<h3>{{review.rtitle}} </h3>
+	        	<h2>{{review.rtitle}} </h2>
 	        </div>
       		<div style="clear:both;"></div>
+
+          <div class="review-content">
+          <p>{{review.message}}</p>
+          </div>
       </ion-item>
     </div>
     </ion-list>

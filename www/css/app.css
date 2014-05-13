@@ -1,4 +1,13 @@
 /* Your app's CSS, go crazy, make it your own */
+/*Styling overall*/
+.tabs{
+  background-color: #444444;
+}
+.tab-item .icon{
+  color: #47D147;
+}
+.tab-item{ color: #47D147; }
+
 
 .ionic-logo {
   display: block;
@@ -29,4 +38,9 @@
 	padding-left: 24px;
 	padding-top: 16px;
     width:80%;
+}
+.review-content > p{
+  white-space: normal;
+  padding-left: 12px;
+  padding-top: 12px;
 }

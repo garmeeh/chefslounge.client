@@ -1,36 +1,39 @@
 <ion-view title="Review">
   <ion-content class="has-header padding">
-  
-    <form name="reviewform" id="reviewform1" ng-submit="reviewFn()">
-  	  	<label class="item item-input tem-stacked-label">
-        <span class="input-label">Rate Us</span>
-    	  	<div class="range">
-      		  <i class="icon ion-ios7-star"></i>
-      		  <input type="range" name="bla" min="0" max="5" ng-model="review.rating">
-      		  <span class="">{{review.rating}}</span>
-    		  </div>
-        </label>
-      	<div class="list ">
-
-          <label class="item item-input item-stacked-label">
-          <span class="input-label">Title</span>
-            <input type="text" placeholder="eg: Great Food!" ng-model="review.rtitle">
+    <div class="padding">
+      <p>Why not let us know how we are doing?</p>
+    </div>
+    
+      <form name="reviewform" id="reviewform1" ng-submit="reviewFn()">
+    	  	<label class="item item-input tem-stacked-label">
+          <span class="input-label">Rate Us</span>
+      	  	<div class="range">
+        		  <i class="icon ion-ios7-star"></i>
+        		  <input type="range" name="bla" min="0" max="5" ng-model="review.rating">
+        		  <span class="">{{review.rating}}</span>
+      		  </div>
           </label>
+        	<div class="list ">
 
-          <label class="item item-input item-stacked-label">
-          <span class="input-label">Email</span>
-            <input type="email" placeholder="joeb@chefslounge.com" ng-model="review.email">
-          </label>
+            <label class="item item-input item-stacked-label">
+            <span class="input-label">Title</span>
+              <input type="text" placeholder="eg: Great Food!" ng-model="review.rtitle">
+            </label>
 
-          <label class="item item-input item-stacked-label">
-          <span class="input-label">Review</span>
-            <textarea placeholder="Tell us about your visit..." ng-model="review.message"></textarea>
-          </label>
-          
-          <button type="submit" class="button button-dark button-block"  >Leave Review</button>
-          <!-- <button class="button button-dark button-block" ng-click="reviewFn()">Leave Review</button> -->
-        </div>
-    </form>
+            <label class="item item-input item-stacked-label">
+            <span class="input-label">Email</span>
+              <input type="email" placeholder="joeb@chefslounge.com" ng-model="review.email">
+            </label>
+
+            <label class="item item-input item-stacked-label">
+            <span class="input-label">Review</span>
+              <textarea placeholder="Tell us about your visit..." ng-model="review.message"></textarea>
+            </label>
+            
+            <button type="submit" class="button button-dark button-block"  >Leave Review</button>
+            <!-- <button class="button button-dark button-block" ng-click="reviewFn()">Leave Review</button> -->
+          </div>
+      </form>
 
   </ion-content>
 </ion-view>
