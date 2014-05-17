@@ -155,23 +155,97 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 		// Create new user and store them in the database
 		$scope.createUser = function(userdata) {
-			var x = userdata.email;
-			var atpos = x.indexOf("@");
-			var dotpos = x.lastIndexOf(".");
-			console.log('Hit createUser');
 
-			if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= x.length) {
-
-				var alertEPopup = $ionicPopup.alert({
-					title: 'Not a valid e-mail address!',
+			if (userdata.firstname == null || userdata.firstname == "") {
+				var alertFNPopup = $ionicPopup.alert({
+					title: 'Please enter your First Name',
 					okType: 'button-dark'
 
 				});
-				alertEPopup.then(function(res) {
-					console.log('Invalid Email');
+				alertFNPopup.then(function(res) {
+					console.log('First Name Blank');
+				});
+				return false;
+			}
+
+			if (userdata.lastname == null || userdata.lastname == "") {
+				var alertLNPopup = $ionicPopup.alert({
+					title: 'Please enter your Last Name',
+					okType: 'button-dark'
+
+				});
+				alertLNPopup.then(function(res) {
+					console.log('Last Name Blank');
+				});
+				return false;
+			}
+
+			if (userdata.phone == null || userdata.phone == "") {
+				var alertPHNPopup = $ionicPopup.alert({
+					title: 'Please enter your phone no.',
+					okType: 'button-dark'
+
+				});
+				alertPHNPopup.then(function(res) {
+					console.log('Phone No. Blank');
+				});
+				return false;
+			}
+			if (userdata.dob == null || userdata.dob == "") {
+				var alertDOBPopup = $ionicPopup.alert({
+					title: 'Please enter your D.O.B',
+					okType: 'button-dark'
+
+				});
+				alertDOBPopup.then(function(res) {
+					console.log('DOB Blank');
 				});
 				return false;
 			} else {
+
+				if (userdata.email == null || userdata.email == "") {
+					var alertEMPopup = $ionicPopup.alert({
+						title: 'Not a valid e-mail address!',
+						okType: 'button-dark'
+
+					});
+					alertEMPopup.then(function(res) {
+						console.log('Invalid Email');
+					});
+					return false;
+				} else {
+					var x = userdata.email;
+					var atpos = x.indexOf("@");
+					var dotpos = x.lastIndexOf(".");
+					console.log('Hit createUser');
+
+					if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= x.length) {
+
+						var alertEPopup = $ionicPopup.alert({
+							title: 'Not a valid e-mail address!',
+							okType: 'button-dark'
+
+						});
+						alertEPopup.then(function(res) {
+							console.log('Invalid Email');
+						});
+						return false;
+					}
+				}
+
+				if (userdata.password == null || userdata.passwordconfirm == null || userdata.passwordconfirm == "" || userdata.password == "") {
+
+					var alertPASSPopup = $ionicPopup.alert({
+						title: 'Please Enter Password!',
+						okType: 'button-dark'
+
+					});
+					alertPASSPopup.then(function(res) {
+						console.log('Invalid Password');
+					});
+					return false;
+				}
+
 
 				if (userdata.password === userdata.passwordconfirm) {
 					var mdpass = md5.createHash(userdata.password || '')
@@ -230,6 +304,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 				}
 			}
+
 
 		};
 
