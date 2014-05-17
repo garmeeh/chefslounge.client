@@ -106,8 +106,8 @@ chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', '$templateCa
 
 // === SignInCtrl
 // =======================================================//
-chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal', '$templateCache',
-	function($scope, $http, $state, $ionicModal, $templateCache) {
+chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal', '$ionicPopup', 'md5', '$templateCache',
+	function($scope, $http, $state, $ionicModal, $ionicPopup, md5, $templateCache) {
 
 
 
@@ -155,42 +155,81 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 		// Create new user and store them in the database
 		$scope.createUser = function(userdata) {
-
+			var x = userdata.email;
+			var atpos = x.indexOf("@");
+			var dotpos = x.lastIndexOf(".");
 			console.log('Hit createUser');
-			var user = 'userdata=' + JSON.stringify(userdata);
-			console.log(user);
-			$scope.userModal.hide();
-			var method = 'POST';
-			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/insertuser';
-			$scope.codeStatus = "";
 
-			$http({
-				method: method,
-				url: inserturl,
-				data: user,
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
-				},
-				cache: $templateCache
-			}).
-			success(function(response) {
-				console.log("success", response);
-				$scope.user = {};
-				//magic!!!! 
-				$state.go('signin', {}, {
-					reload: true,
-					inherit: false
+			if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= x.length) {
+
+				var alertEPopup = $ionicPopup.alert({
+					title: 'Not a valid e-mail address!',
+					okType: 'button-dark'
+
 				});
-				$scope.userModal.remove();
+				alertEPopup.then(function(res) {
+					console.log('Invalid Email');
+				});
+				return false;
+			} else {
 
-			}).
-			error(function(response) {
-				console.log("error");
-				$scope.codeStatus = response || "Request failed";
-				console.log($scope.codeStatus);
-			});
+				if (userdata.password === userdata.passwordconfirm) {
+					var mdpass = md5.createHash(userdata.password || '')
+					var newUser = {
+						'firstname': userdata.firstname,
+						'lastname': userdata.lastname,
+						'email': userdata.email,
+						'phone': userdata.phone,
+						'password': mdpass,
+						'dob': userdata.dob
+					};
 
-			// return false;
+					var user = 'userdata=' + JSON.stringify(newUser);
+					console.log('Sending to server => ' + user);
+
+					$scope.userModal.hide();
+					var method = 'POST';
+					var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/insertuser';
+					$scope.codeStatus = "";
+
+					$http({
+						method: method,
+						url: inserturl,
+						data: user,
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						cache: $templateCache
+					}).
+					success(function(response) {
+						console.log("success", response);
+						$scope.user = {};
+						//magic!!!! 
+						$state.go('signin', {}, {
+							reload: true,
+							inherit: false
+						});
+						$scope.userModal.remove();
+
+					}).
+					error(function(response) {
+						console.log("error");
+						$scope.codeStatus = response || "Request failed";
+						console.log($scope.codeStatus);
+					});
+
+				} else {
+					var alertPopup = $ionicPopup.alert({
+						title: 'Passwords Do Not Match!',
+						okType: 'button-dark'
+
+					});
+					alertPopup.then(function(res) {
+						console.log('Password Mismatch');
+					});
+
+				}
+			}
 
 		};
 

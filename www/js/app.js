@@ -1,6 +1,6 @@
 'use strict';
 
-var chefslounge = angular.module('chefslounge', ['ionic', 'chefslounge.controllers', 'chefslounge.services'])
+var chefslounge = angular.module('chefslounge', ['ionic', 'angular-md5', 'chefslounge.controllers', 'chefslounge.services'])
 
 
 chefslounge.config(function($stateProvider, $urlRouterProvider) {
