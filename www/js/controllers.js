@@ -181,7 +181,13 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 
 
+		if (localStorage.getItem("Menus") == true) {
+			localStorage.removeItem("Menus");
+			console.log("removed menus");
+		}
+
 		$scope.signIn = function(user) {
+
 			console.log('Hit logIn');
 			var mdpass = md5.createHash(user.password || '');
 			var userprep = {
@@ -627,4 +633,78 @@ chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$templat
 	}
 ])
 
-.controller('MenusCtrl', function($scope) {});
+chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '$templateCache',
+	function($scope, $http, $state, $location, $templateCache) {
+
+		$scope.getMenusFn = function() {
+			// on refactore move var direct.
+			var method = 'GET';
+			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/getmenus';
+			$scope.codeStatus = "";
+			console.log('Hit Function getMenusFn');
+
+
+			$http({
+				method: method,
+				url: inserturl,
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				cache: $templateCache
+			}).
+			success(function(response) {
+				console.log(response);
+				$scope.menus = response;
+				console.log("MENUS", $scope.menus[0].menuName);
+
+				localStorage.setItem('Menus', JSON.stringify($scope.menus));
+
+
+			}).error(function(response) {
+				console.log("error");
+				$scope.codeStatus = response || "Request failed";
+				console.log($scope.codeStatus);
+			});
+
+
+		};
+
+		$scope.getMenusFn();
+
+		$scope.goMenu = function(menuD) {
+			$location.url('/tab/menus/' + menuD);
+		}
+
+
+
+	}
+])
+
+chefslounge.controller('MenuCtrl', ['$scope', '$state', '$stateParams', '$templateCache',
+	function($scope, $state, $stateParams, $templateCache) {
+
+		if (localStorage.getItem("Menus") == true) {
+			localStorage.removeItem("Menus");
+			console.log("removed menus");
+		}
+
+		var currentMenu = [];
+		//console.log($stateParams);
+		var menutype = $stateParams.menutype
+		console.log($scope);
+		var menuD = localStorage.getItem("Menus");
+		$scope.menu = JSON.parse(menuD);
+		// console.log($scope.menu);
+
+		for (var i = 0; i < $scope.menu.length; i++) {
+			var menuItem = $scope.menu[i];
+			if (menuItem.menuName === menutype) {
+				currentMenu = menuItem.items;
+				$scope.currentMenu = currentMenu;
+				console.log($scope.currentMenu);
+			}
+		}
+
+
+	}
+])

@@ -117,6 +117,16 @@ chefslounge.config(function($stateProvider, $urlRouterProvider) {
         }
     })
 
+    .state('tab.menu', {
+        url: '/menus/:menutype',
+        views: {
+            'tab-menus': {
+                templateUrl: 'templates/tab-menu.html',
+                controller: 'MenuCtrl'
+            }
+        }
+    })
+
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/sign-in');
 
