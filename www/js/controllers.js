@@ -1,5 +1,38 @@
 angular.module('chefslounge.controllers', [])
 
+.factory('Dates', function() {
+	return {
+
+		all: function() {
+			var now = new Date();
+			var year = now.getFullYear();
+			var month = now.getMonth() + 1;
+			var day = now.getDate();
+			var hour = now.getHours();
+			var minute = now.getMinutes();
+			var second = now.getSeconds();
+			if (month.toString().length == 1) {
+				var month = '0' + month;
+			}
+			if (day.toString().length == 1) {
+				var day = '0' + day;
+			}
+			if (hour.toString().length == 1) {
+				var hour = '0' + hour;
+			}
+			if (minute.toString().length == 1) {
+				var minute = '0' + minute;
+			}
+			if (second.toString().length == 1) {
+				var second = '0' + second;
+			}
+			//var dateTime = year + '/' + month + '/' + day + ' ' + hour + ':' + minute;
+			var dateTime = hour + ':' + minute + ' - ' + day + '/' + month + '/' + year;
+
+			return dateTime;
+		}
+	}
+})
 chefslounge.controller('HomeCtrl', ['$scope', '$state',
 	function($scope, $state) {
 
@@ -56,15 +89,31 @@ chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$templateCach
 ])
 
 
-chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', '$templateCache',
-	function($scope, $http, $state, $templateCache) {
+chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', 'Dates', '$templateCache',
+	function($scope, $http, $state, Dates, $templateCache) {
 		// $scope.enquiry = {};
 
 		$scope.enquiryFn = function(data) {
 
+			var cdate = Dates.all();
+			console.log(cdate);
+			var user = localStorage.getItem("userData");
+			var userD = JSON.parse(user);
+			var userData = userD;
+
+			var enq = {
+				'firstname': userData.firstname,
+				'lastname': userData.lastname,
+				'email': userData.email,
+				'subject': data.subject,
+				'message': data.message,
+				'sent': cdate
+			};
+			console.log(enq);
+
 			console.log('Hit enquiry');
-			var enquiry = 'enquiry=' + JSON.stringify(data);
-			console.log(enquiry);
+			var msg = 'enquiry=' + JSON.stringify(enq);
+			console.log(msg);
 			var method = 'POST';
 			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/sendmsg';
 			$scope.codeStatus = "";
@@ -72,7 +121,7 @@ chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', '$templateCa
 			$http({
 				method: method,
 				url: inserturl,
-				data: enquiry,
+				data: msg,
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
 				},
@@ -104,6 +153,27 @@ chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', '$templateCa
 
 .controller('ProfileCtrl', function($scope) {})
 
+chefslounge.controller('LogCtrl', ['$scope', '$state', '$templateCache',
+	function($scope, $state, $templateCache) {
+
+		$scope.logOut = function() {
+			localStorage.clear();
+			console.log("Clearing local data")
+			$state.go('signin', {}, {
+				reload: true,
+				inherit: false
+			});
+		}
+		$scope.noLogOut = function() {
+			localStorage.clear();
+			$state.go('tab.home', {}, {
+				reload: true,
+				inherit: false
+			});
+		}
+	}
+])
+
 // === SignInCtrl
 // =======================================================//
 chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal', '$ionicPopup', 'md5', '$templateCache',
@@ -112,37 +182,83 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 
 		$scope.signIn = function(user) {
-			//var user = 'user=' + JSON.stringify(user);
-			//var method = 'POST';
-			//var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/checkusers';
-			//$scope.codeStatus = "";
-			console.log('Hit Function signIn');
+			console.log('Hit logIn');
+			var mdpass = md5.createHash(user.password || '');
+			var userprep = {
+				'email': user.email,
+				'password': mdpass
+			}
+			var user = JSON.stringify(userprep);
+			console.log(user);
 
-			// $http({
-			//     method: method,
-			//     url: inserturl,
-			//     data: user,
-			//     headers: {
-			//         'Content-Type': 'application/x-www-form-urlencoded'
-			//     },
-			//     cache: $templateCache
-			// }).
-			// success(function(response) {
+			var method = 'POST';
+			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/clientlogin';
+			$scope.codeStatus = "";
 
-			//     console.log("user confirmed", response);
+			$http({
+				method: method,
+				dataType: 'json',
+				url: inserturl,
+				data: user,
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				cache: $templateCache
+			}).
+			success(function(response) {
+
+				if (response.statusCode == 200) {
 
 
-			// }).
-			// error(function(response) {
-			//     console.log("error");
-			//     $scope.codeStatus = response || "Request failed";
-			//     console.log($scope.codeStatus);
-			// });
-			//return false;
+					console.log(response);
 
-			console.log('Sign-In', user.email);
-			$state.go('tab.home');
-			//$location.path('/#/home');
+					var data = response.payload.userData;
+
+					localStorage.setItem("userData", JSON.stringify(data));
+
+					var alertPopup = $ionicPopup.alert({
+						title: 'Log In Success',
+						okType: 'button-dark'
+					});
+					alertPopup.then(function(res) {
+						console.log('Logged In');
+					});
+
+
+
+					// var user = localStorage.getItem("userData");
+					// var userD = JSON.parse(user);
+					// $scope.userData = userD;
+					// console.log($scope);
+					// alert("Hello " + $scope.userData.username)
+
+					$state.go('tab.home', {}, {
+						reload: true,
+						inherit: false
+					});
+				} else if (response.statusCode == 500) {
+					console.error("Invalid Login");
+
+					var alertPopup = $ionicPopup.alert({
+						title: 'Invalid log in. Please Try Again',
+						okType: 'button-dark'
+
+					});
+					alertPopup.then(function(res) {
+						console.log('Invalid');
+					});
+				}
+
+
+			}).
+			error(function(response) {
+				console.log("error");
+				$scope.codeStatus = response || "Request failed";
+				console.log($scope.codeStatus);
+			});
+
+
+
 		};
 
 		// Create and load the Modal
@@ -329,18 +445,33 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 // === BookingCtrl
 // =======================================================//
-chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', '$templateCache',
-	function($scope, $http, $state, $templateCache) {
+chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$templateCache',
+	function($scope, $http, $state, Dates, $templateCache) {
 		$scope.bookInput = {};
 
 
 		var method = 'POST';
 		var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/insertbooking';
 		$scope.codeStatus = "";
-		$scope.booktableFn = function() {
+		$scope.booktableFn = function(data) {
 
-			console.log('Hit Function booktableFn', JSON.stringify($scope.bookInput));
-			var jdata = 'bookingdata=' + JSON.stringify($scope.bookInput);
+			var cdate = Dates.all();
+
+			var user = localStorage.getItem("userData");
+			var userD = JSON.parse(user);
+			var userData = userD;
+
+			var bookingDetails = {
+				'firstname': userData.firstname,
+				'lastname': userData.lastname,
+				'email': userData.email,
+				'bookingdate': data.bookingdate,
+				'bookingguests': data.bookingguests,
+				'bookingtime': data.bookingtime,
+				'sent': cdate
+			};
+			//console.log('Hit Function booktableFn', JSON.stringify($scope.bookInput));
+			var jdata = 'bookingdata=' + JSON.stringify(bookingDetails);
 
 			$http({
 				method: method,
@@ -383,17 +514,35 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', '$templateCache
 
 // === ReviewCtrl
 // =======================================================//
-chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', '$templateCache',
-	function($scope, $http, $state, $templateCache) {
+chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$templateCache',
+	function($scope, $http, $state, Dates, $templateCache) {
 		$scope.review = {};
+		$scope.review.rating = '0';
 
 		//=== reviewFn() ====\\
-		$scope.reviewFn = function() {
+		$scope.reviewFn = function(data) {
+
+			var cdate = Dates.all();
+
+			var user = localStorage.getItem("userData");
+			var userD = JSON.parse(user);
+			var userData = userD;
+
+			var reviewDetails = {
+				'firstname': userData.firstname,
+				'lastname': userData.lastname,
+				'email': userData.email,
+				'rating': data.rating,
+				'rtitle': data.rtitle,
+				'message': data.message,
+				'sent': cdate
+			};
+
 			var method = 'POST';
 			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/insertreview';
 			$scope.codeStatus = "";
-			console.log('Hit Function reviewFn', JSON.stringify($scope.review));
-			var jdata = 'mydata=' + JSON.stringify($scope.review);
+			console.log('Hit Function reviewFn', JSON.stringify(reviewDetails));
+			var jdata = 'mydata=' + JSON.stringify(reviewDetails);
 
 			$http({
 				method: method,

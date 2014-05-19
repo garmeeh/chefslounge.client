@@ -4,7 +4,7 @@
       <p>Why not let us know how we are doing?</p>
     </div>
     
-      <form name="reviewform" id="reviewform1" ng-submit="reviewFn()">
+      <form name="reviewform" id="reviewform1" ng-submit="reviewFn(review)">
     	  	<label class="item item-input tem-stacked-label">
           <span class="input-label">Rate Us</span>
       	  	<div class="range">
@@ -19,11 +19,7 @@
             <span class="input-label">Title</span>
               <input type="text" placeholder="eg: Great Food!" ng-model="review.rtitle">
             </label>
-
-            <label class="item item-input item-stacked-label">
-            <span class="input-label">Email</span>
-              <input type="email" placeholder="joeb@chefslounge.com" ng-model="review.email">
-            </label>
+ 
 
             <label class="item item-input item-stacked-label">
             <span class="input-label">Review</span>

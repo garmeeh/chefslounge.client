@@ -2,7 +2,7 @@
   <ion-content has-header="true" padding="true">
   <ion-list>
     <div class="item-container">
-      <ion-item ng-repeat="review in reviews" type="item-text-wrap"> 
+      <ion-item ng-repeat="review in reviews | orderBy:'-sent'" type="item-text-wrap"> 
         
         	
         	<div class="star-container">
@@ -16,7 +16,10 @@
       		<div style="clear:both;"></div>
 
           <div class="review-content">
+          <hr />
           <p>{{review.message}}</p>
+          <hr />
+          <h3>{{review.firstname}} | {{review.sent}} </h3>
           </div>
       </ion-item>
     </div>

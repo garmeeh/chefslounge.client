@@ -1,5 +1,6 @@
 angular.module('chefslounge.services', [])
 
+
 /**
  * A simple example service that returns some data.
  */

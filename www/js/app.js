@@ -78,7 +78,7 @@ chefslounge.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'tab-home': {
                 templateUrl: 'templates/log-out.html',
-                // controller: 'ViewReviewCtrl'
+                controller: 'LogCtrl'
             }
         }
     })
