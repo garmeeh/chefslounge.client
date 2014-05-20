@@ -207,8 +207,8 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 
 
-		if (localStorage.getItem("Menus") == true) {
-			localStorage.removeItem("Menus");
+		if (localStorage.getItem('Menus')) {
+			localStorage.removeItem('Menus');
 			console.log("removed menus");
 		}
 
@@ -780,8 +780,29 @@ chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$timeout
 	}
 ])
 
-chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '$templateCache',
-	function($scope, $http, $state, $location, $templateCache) {
+chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '$timeout',
+
+	function($scope, $http, $state, $location, $timeout) {
+
+		$scope.doRefresh = function() {
+
+			console.log('Refreshing!');
+			$timeout(function() {
+
+				$scope.getMenusFn();
+				console.log("Refreshing");
+				if (localStorage.getItem('Menus')) {
+					localStorage.removeItem('Menus');
+					console.log("removed menus");
+				}
+				//Stop the ion-refresher from spinning
+				$scope.$broadcast('scroll.refreshComplete');
+
+			}, 1000);
+
+		};
+
+
 
 		$scope.getMenusFn = function() {
 			// on refactore move var direct.
@@ -797,7 +818,6 @@ chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				cache: $templateCache
 			}).
 			success(function(response) {
 				console.log(response);
@@ -816,7 +836,7 @@ chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '
 
 		};
 
-		$scope.getMenusFn();
+
 
 		$scope.goMenu = function(menuD) {
 			$location.url('/tab/menus/' + menuD);
@@ -830,10 +850,7 @@ chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '
 chefslounge.controller('MenuCtrl', ['$scope', '$state', '$stateParams', '$templateCache',
 	function($scope, $state, $stateParams, $templateCache) {
 
-		if (localStorage.getItem("Menus") == true) {
-			localStorage.removeItem("Menus");
-			console.log("removed menus");
-		}
+
 
 		var currentMenu = [];
 		//console.log($stateParams);
