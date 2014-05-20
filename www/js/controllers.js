@@ -26,7 +26,7 @@ angular.module('chefslounge.controllers', [])
 			if (second.toString().length == 1) {
 				var second = '0' + second;
 			}
-			//var dateTime = year + '/' + month + '/' + day + ' ' + hour + ':' + minute;
+
 			var dateTime = hour + ':' + minute + ' - ' + day + '/' + month + '/' + year;
 
 			return dateTime;
@@ -37,7 +37,6 @@ chefslounge.controller('HomeCtrl', ['$scope', '$state',
 	function($scope, $state) {
 
 		$scope.refreshFn = function() {
-			console.log("Hit refreshFn");
 			$state.go('tab.home', {}, {
 				reload: true,
 				inherit: false
@@ -51,12 +50,9 @@ chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$timeout',
 	function($scope, $http, $state, $timeout) {
 
 		$scope.doRefresh = function() {
-
-			console.log('Refreshing!');
 			$timeout(function() {
 
 				$scope.getOfferFn();
-				console.log("Refreshing");
 
 				//Stop the ion-refresher from spinning
 				$scope.$broadcast('scroll.refreshComplete');
@@ -79,8 +75,6 @@ chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$timeout',
 			var method = 'GET';
 			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/getoffer';
 			$scope.codeStatus = "";
-			console.log('Hit Function getOfferFn');
-
 
 			$http({
 				method: method,
@@ -90,19 +84,13 @@ chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$timeout',
 				},
 			}).
 			success(function(response) {
-				console.log(response);
 				$scope.offers = response;
-
-
-
 			}).
 			error(function(response) {
-				console.log("error");
 				$scope.codeStatus = response || "Request failed";
 				console.log($scope.codeStatus);
 			});
 
-			return false;
 		};
 
 	}
@@ -111,12 +99,10 @@ chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$timeout',
 
 chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', 'Dates', '$ionicPopup',
 	function($scope, $http, $state, Dates, $ionicPopup) {
-		// $scope.enquiry = {};
 
 		$scope.enquiryFn = function(data) {
 
 			var cdate = Dates.all();
-			console.log(cdate);
 			var user = localStorage.getItem("userData");
 			var userD = JSON.parse(user);
 			var userData = userD;
@@ -129,11 +115,9 @@ chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', 'Dates', '$i
 				'message': data.message,
 				'sent': cdate
 			};
-			console.log(enq);
 
-			console.log('Hit enquiry');
 			var msg = 'enquiry=' + JSON.stringify(enq);
-			console.log(msg);
+
 			var method = 'POST';
 			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/sendmsg';
 			$scope.codeStatus = "";
@@ -147,7 +131,7 @@ chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', 'Dates', '$i
 				},
 			}).
 			success(function(response) {
-				console.log("success", response);
+
 				var alertPopup = $ionicPopup.alert({
 					title: 'Message Sent!',
 					subTitle: 'Someone will be in touch shortly.',
@@ -155,7 +139,6 @@ chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', 'Dates', '$i
 
 				});
 				alertPopup.then(function(res) {
-					console.log('Reset Password');
 					$state.go('tab.home', {}, {
 						reload: true,
 						inherit: false
@@ -163,28 +146,18 @@ chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', 'Dates', '$i
 				});
 			}).
 			error(function(response) {
-				console.log("error");
 				$scope.codeStatus = response || "Request failed";
 				console.log($scope.codeStatus);
 			});
-
-			// return false;
-
 		};
-
-
-
 	}
 ])
-
-.controller('ProfileCtrl', function($scope) {})
 
 chefslounge.controller('LogCtrl', ['$scope', '$state', '$templateCache',
 	function($scope, $state, $templateCache) {
 
 		$scope.logOut = function() {
 			localStorage.clear();
-			console.log("Clearing local data")
 			$state.go('signin', {}, {
 				reload: true,
 				inherit: false
@@ -205,23 +178,18 @@ chefslounge.controller('LogCtrl', ['$scope', '$state', '$templateCache',
 chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal', '$ionicPopup', 'md5',
 	function($scope, $http, $state, $ionicModal, $ionicPopup, md5) {
 
-
-
 		if (localStorage.getItem('Menus')) {
 			localStorage.removeItem('Menus');
-			console.log("removed menus");
 		}
 
 		$scope.signIn = function(user) {
 
-			console.log('Hit logIn');
 			var mdpass = md5.createHash(user.password || '');
 			var userprep = {
 				'email': user.email,
 				'password': mdpass
 			}
 			var user = JSON.stringify(userprep);
-			console.log(user);
 
 			var method = 'POST';
 			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/clientlogin';
@@ -241,9 +209,6 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 				if (response.statusCode == 200) {
 
-
-					console.log(response);
-
 					var data = response.payload.userData;
 
 					localStorage.setItem("userData", JSON.stringify(data));
@@ -253,7 +218,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 						okType: 'button-dark'
 					});
 					alertPopup.then(function(res) {
-						console.log('Logged In');
+
 					});
 
 					$state.go('tab.home', {}, {
@@ -261,7 +226,6 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 						inherit: false
 					});
 				} else if (response.statusCode == 500) {
-					console.error("Invalid Login");
 
 					var alertPopup = $ionicPopup.alert({
 						title: 'Invalid log in. Please Try Again',
@@ -269,14 +233,11 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 					});
 					alertPopup.then(function(res) {
-						console.log('Invalid');
+
 					});
 				}
-
-
 			}).
 			error(function(response) {
-				console.log("error");
 				$scope.codeStatus = response || "Request failed";
 				console.log($scope.codeStatus);
 			});
@@ -303,7 +264,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 				});
 				alertFNPopup.then(function(res) {
-					console.log('First Name Blank');
+
 				});
 				return false;
 			}
@@ -315,7 +276,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 				});
 				alertLNPopup.then(function(res) {
-					console.log('Last Name Blank');
+
 				});
 				return false;
 			}
@@ -327,7 +288,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 				});
 				alertPHNPopup.then(function(res) {
-					console.log('Phone No. Blank');
+
 				});
 				return false;
 			}
@@ -338,7 +299,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 				});
 				alertDOBPopup.then(function(res) {
-					console.log('DOB Blank');
+
 				});
 				return false;
 			} else {
@@ -350,14 +311,13 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 					});
 					alertEMPopup.then(function(res) {
-						console.log('Invalid Email');
+
 					});
 					return false;
 				} else {
 					var x = userdata.email;
 					var atpos = x.indexOf("@");
 					var dotpos = x.lastIndexOf(".");
-					console.log('Hit createUser');
 
 					if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= x.length) {
 
@@ -367,7 +327,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 						});
 						alertEPopup.then(function(res) {
-							console.log('Invalid Email');
+
 						});
 						return false;
 					}
@@ -381,7 +341,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 					});
 					alertPASSPopup.then(function(res) {
-						console.log('Invalid Password');
+
 					});
 					return false;
 				}
@@ -399,7 +359,6 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 					};
 
 					var user = 'userdata=' + JSON.stringify(newUser);
-					console.log('Sending to server => ' + user);
 
 					$scope.userModal.hide();
 					var method = 'POST';
@@ -416,7 +375,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 					}).
 					success(function(response) {
-						console.log("success", response);
+
 						$scope.user = {};
 						var alertPopup = $ionicPopup.alert({
 							title: 'Successful Sign Up!  Now just sign in...',
@@ -424,7 +383,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 						});
 						alertPopup.then(function(res) {
-							console.log('Successful Sign Up');
+
 						});
 						$state.go('signin', {}, {
 							reload: true,
@@ -434,7 +393,6 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 					}).
 					error(function(response) {
-						console.log("error");
 						$scope.codeStatus = response || "Request failed";
 						console.log($scope.codeStatus);
 					});
@@ -446,7 +404,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 					});
 					alertPopup.then(function(res) {
-						console.log('Password Mismatch');
+
 					});
 
 				}
@@ -454,8 +412,6 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 
 
 		};
-
-
 
 		// Open new user modal
 		$scope.newUser = function() {
@@ -476,23 +432,18 @@ chefslounge.controller('ForgotPassCtrl', ['$scope', '$state', '$ionicPopup',
 
 		$scope.forgotPass = function() {
 
-
-
 			var alertPopup = $ionicPopup.alert({
 				title: 'Reset Email Sent',
 				okType: 'button-dark'
 
 			});
 			alertPopup.then(function(res) {
-				console.log('Reset Password');
+
 				$state.go('signin', {}, {
 					reload: true,
 					inherit: false
 				});
 			});
-
-
-
 		}
 
 	}
@@ -525,7 +476,7 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$ioni
 
 				});
 				alertBDPopup.then(function(res) {
-					console.log('Date Blank');
+
 				});
 				return false;
 			}
@@ -538,7 +489,7 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$ioni
 
 				});
 				alertBTPopup.then(function(res) {
-					console.log('Time Blank');
+
 				});
 				return false;
 			}
@@ -551,7 +502,7 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$ioni
 
 				});
 				alertBGPopup.then(function(res) {
-					console.log('Guests Empty');
+
 				});
 				return false;
 			}
@@ -567,7 +518,7 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$ioni
 				'bookingtime': data.bookingtime,
 				'sent': cdate
 			};
-			//console.log('Hit Function booktableFn', JSON.stringify($scope.bookInput));
+
 			var jdata = 'bookingdata=' + JSON.stringify(bookingDetails);
 
 			$http({
@@ -579,14 +530,14 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$ioni
 				},
 			}).
 			success(function(response) {
-				console.log("success", response);
+
 				var alertPopup = $ionicPopup.alert({
 					title: 'Someone will be in touch shortly to confirm.',
 					okType: 'button-dark'
 
 				});
 				alertPopup.then(function(res) {
-					console.log('Reset Password');
+
 					$state.go('tab.home', {}, {
 						reload: true,
 						inherit: false
@@ -595,7 +546,6 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$ioni
 
 			}).
 			error(function(response) {
-				console.log("error");
 				$scope.codeStatus = response || "Request failed";
 				console.log($scope.codeStatus);
 			});
@@ -621,7 +571,6 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$io
 			var userD = JSON.parse(user);
 			var userData = userD;
 
-
 			if (data.rating == null || data.rating == "") {
 
 				var alertBDPopup = $ionicPopup.alert({
@@ -629,9 +578,7 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$io
 					okType: 'button-dark'
 
 				});
-				alertBDPopup.then(function(res) {
-					console.log('Rating Blank');
-				});
+				alertBDPopup.then(function(res) {});
 				return false;
 			}
 
@@ -643,7 +590,7 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$io
 
 				});
 				alertBTPopup.then(function(res) {
-					console.log('Title Blank');
+
 				});
 				return false;
 			}
@@ -656,7 +603,7 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$io
 
 				});
 				alertBGPopup.then(function(res) {
-					console.log('Message Empty');
+
 				});
 				return false;
 			}
@@ -675,7 +622,6 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$io
 			var method = 'POST';
 			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/insertreview';
 			$scope.codeStatus = "";
-			console.log('Hit Function reviewFn', JSON.stringify(reviewDetails));
 			var jdata = 'mydata=' + JSON.stringify(reviewDetails);
 
 			$http({
@@ -687,14 +633,13 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$io
 				},
 			}).
 			success(function(response) {
-				console.log("success", response);
 				var alertPopup = $ionicPopup.alert({
 					title: 'Thanks! Review Sent!',
 					okType: 'button-dark'
 
 				});
 				alertPopup.then(function(res) {
-					console.log('Reviewed');
+
 					$state.go('tab.home', {}, {
 						reload: true,
 						inherit: false
@@ -704,7 +649,6 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$io
 
 			}).
 			error(function(response) {
-				console.log("error");
 				$scope.codeStatus = response || "Request failed";
 				console.log($scope.codeStatus);
 			});
@@ -722,13 +666,10 @@ chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$timeout
 
 		$scope.doRefresh = function() {
 
-			console.log('Refreshing!');
 			$timeout(function() {
 
 				$scope.getReviewFn();
-				console.log("Refreshing");
 
-				//Stop the ion-refresher from spinning
 				$scope.$broadcast('scroll.refreshComplete');
 
 			}, 1000);
@@ -749,8 +690,6 @@ chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$timeout
 			var method = 'GET';
 			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/getreview';
 			$scope.codeStatus = "";
-			console.log('Hit Function getReviewFn');
-
 
 			$http({
 				method: method,
@@ -760,19 +699,12 @@ chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$timeout
 				},
 			}).
 			success(function(response) {
-				console.log(response);
 				$scope.reviews = response;
-
-
-
 			}).
 			error(function(response) {
-				console.log("error");
 				$scope.codeStatus = response || "Request failed";
 				console.log($scope.codeStatus);
 			});
-
-			return false;
 		};
 
 
@@ -786,14 +718,11 @@ chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '
 
 		$scope.doRefresh = function() {
 
-			console.log('Refreshing!');
 			$timeout(function() {
 
 				$scope.getMenusFn();
-				console.log("Refreshing");
 				if (localStorage.getItem('Menus')) {
 					localStorage.removeItem('Menus');
-					console.log("removed menus");
 				}
 				//Stop the ion-refresher from spinning
 				$scope.$broadcast('scroll.refreshComplete');
@@ -809,8 +738,6 @@ chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '
 			var method = 'GET';
 			var inserturl = 'http://murmuring-beyond-7893.herokuapp.com/getmenus';
 			$scope.codeStatus = "";
-			console.log('Hit Function getMenusFn');
-
 
 			$http({
 				method: method,
@@ -820,23 +747,17 @@ chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '
 				},
 			}).
 			success(function(response) {
-				console.log(response);
 				$scope.menus = response;
-				console.log("MENUS", $scope.menus[0].menuName);
 
 				localStorage.setItem('Menus', JSON.stringify($scope.menus));
 
-
 			}).error(function(response) {
-				console.log("error");
 				$scope.codeStatus = response || "Request failed";
 				console.log($scope.codeStatus);
 			});
 
 
 		};
-
-
 
 		$scope.goMenu = function(menuD) {
 			$location.url('/tab/menus/' + menuD);
@@ -850,22 +771,16 @@ chefslounge.controller('MenusCtrl', ['$scope', '$http', '$state', '$location', '
 chefslounge.controller('MenuCtrl', ['$scope', '$state', '$stateParams', '$templateCache',
 	function($scope, $state, $stateParams, $templateCache) {
 
-
-
 		var currentMenu = [];
-		//console.log($stateParams);
-		var menutype = $stateParams.menutype
-		console.log($scope);
+		var menutype = $stateParams.menutype;
 		var menuD = localStorage.getItem("Menus");
 		$scope.menu = JSON.parse(menuD);
-		// console.log($scope.menu);
 
 		for (var i = 0; i < $scope.menu.length; i++) {
 			var menuItem = $scope.menu[i];
 			if (menuItem.menuName === menutype) {
 				currentMenu = menuItem.items;
 				$scope.currentMenu = currentMenu;
-				console.log($scope.currentMenu);
 			}
 		}
 
