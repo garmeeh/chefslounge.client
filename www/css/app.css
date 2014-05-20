@@ -44,3 +44,6 @@
   padding-left: 12px;
   padding-top: 12px;
 }
+.whiteadj > p{
+  white-space: normal;
+}

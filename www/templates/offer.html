@@ -12,9 +12,13 @@
 
     <ion-list>
       <ion-item ng-repeat="offer in offers | orderBy:'expire'">
+     
+      <div class="whiteadj">
         <h2>{{offer.title}}</h2>
         <p>{{offer.message}}</p>
         <p><b>Expires:</b> {{offer.expire}}</p>
+      </div>
+     
       </ion-item>
     </ion-list>
     
