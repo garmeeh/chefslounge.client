@@ -47,9 +47,31 @@ chefslounge.controller('HomeCtrl', ['$scope', '$state',
 
 	}
 ])
-chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$templateCache',
-	function($scope, $http, $state, $templateCache) {
+chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$timeout',
+	function($scope, $http, $state, $timeout) {
 
+		$scope.doRefresh = function() {
+
+			console.log('Refreshing!');
+			$timeout(function() {
+
+				$scope.getOfferFn();
+				console.log("Refreshing");
+
+				//Stop the ion-refresher from spinning
+				$scope.$broadcast('scroll.refreshComplete');
+
+			}, 1000);
+
+		};
+
+		$scope.$watch('offers', function(newVal, oldVal) {
+			if (newVal === oldVal) {
+				return;
+			}
+
+			$scope.offers = newVal;
+		});
 		//=== getOfferFn() ====\\
 
 		$scope.getOfferFn = function() {
@@ -66,7 +88,6 @@ chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$templateCach
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				cache: $templateCache
 			}).
 			success(function(response) {
 				console.log(response);
@@ -84,13 +105,12 @@ chefslounge.controller('OfferCtrl', ['$scope', '$http', '$state', '$templateCach
 			return false;
 		};
 
-		$scope.getOfferFn();
 	}
 ])
 
 
-chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', 'Dates', '$templateCache',
-	function($scope, $http, $state, Dates, $templateCache) {
+chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', 'Dates', '$ionicPopup',
+	function($scope, $http, $state, Dates, $ionicPopup) {
 		// $scope.enquiry = {};
 
 		$scope.enquiryFn = function(data) {
@@ -125,16 +145,22 @@ chefslounge.controller('EnquiryCtrl', ['$scope', '$http', '$state', 'Dates', '$t
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
 				},
-				cache: $templateCache
 			}).
 			success(function(response) {
 				console.log("success", response);
-				$state.go('tab.home', {}, {
-					reload: true,
-					inherit: false
+				var alertPopup = $ionicPopup.alert({
+					title: 'Message Sent!',
+					subTitle: 'Someone will be in touch shortly.',
+					okType: 'button-dark'
+
 				});
-
-
+				alertPopup.then(function(res) {
+					console.log('Reset Password');
+					$state.go('tab.home', {}, {
+						reload: true,
+						inherit: false
+					});
+				});
 			}).
 			error(function(response) {
 				console.log("error");
@@ -176,8 +202,8 @@ chefslounge.controller('LogCtrl', ['$scope', '$state', '$templateCache',
 
 // === SignInCtrl
 // =======================================================//
-chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal', '$ionicPopup', 'md5', '$templateCache',
-	function($scope, $http, $state, $ionicModal, $ionicPopup, md5, $templateCache) {
+chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal', '$ionicPopup', 'md5',
+	function($scope, $http, $state, $ionicModal, $ionicPopup, md5) {
 
 
 
@@ -209,7 +235,7 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				cache: $templateCache
+
 			}).
 			success(function(response) {
 
@@ -229,14 +255,6 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 					alertPopup.then(function(res) {
 						console.log('Logged In');
 					});
-
-
-
-					// var user = localStorage.getItem("userData");
-					// var userD = JSON.parse(user);
-					// $scope.userData = userD;
-					// console.log($scope);
-					// alert("Hello " + $scope.userData.username)
 
 					$state.go('tab.home', {}, {
 						reload: true,
@@ -395,12 +413,19 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 						headers: {
 							'Content-Type': 'application/x-www-form-urlencoded'
 						},
-						cache: $templateCache
+
 					}).
 					success(function(response) {
 						console.log("success", response);
 						$scope.user = {};
-						//magic!!!! 
+						var alertPopup = $ionicPopup.alert({
+							title: 'Successful Sign Up!  Now just sign in...',
+							okType: 'button-dark'
+
+						});
+						alertPopup.then(function(res) {
+							console.log('Successful Sign Up');
+						});
 						$state.go('signin', {}, {
 							reload: true,
 							inherit: false
@@ -445,14 +470,39 @@ chefslounge.controller('SignInCtrl', ['$scope', '$http', '$state', '$ionicModal'
 	}
 ])
 
-.controller('ForgotPassCtrl', function($scope) {})
 
+chefslounge.controller('ForgotPassCtrl', ['$scope', '$state', '$ionicPopup',
+	function($scope, $state, $ionicPopup) {
+
+		$scope.forgotPass = function() {
+
+
+
+			var alertPopup = $ionicPopup.alert({
+				title: 'Reset Email Sent',
+				okType: 'button-dark'
+
+			});
+			alertPopup.then(function(res) {
+				console.log('Reset Password');
+				$state.go('signin', {}, {
+					reload: true,
+					inherit: false
+				});
+			});
+
+
+
+		}
+
+	}
+])
 
 
 // === BookingCtrl
 // =======================================================//
-chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$templateCache',
-	function($scope, $http, $state, Dates, $templateCache) {
+chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$ionicPopup',
+	function($scope, $http, $state, Dates, $ionicPopup) {
 		$scope.bookInput = {};
 
 
@@ -466,6 +516,47 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$temp
 			var user = localStorage.getItem("userData");
 			var userD = JSON.parse(user);
 			var userData = userD;
+
+			if (data.bookingdate == null || data.bookingdate == "") {
+
+				var alertBDPopup = $ionicPopup.alert({
+					title: 'Please enter date',
+					okType: 'button-dark'
+
+				});
+				alertBDPopup.then(function(res) {
+					console.log('Date Blank');
+				});
+				return false;
+			}
+
+			if (data.bookingtime == null || data.bookingtime == "") {
+
+				var alertBTPopup = $ionicPopup.alert({
+					title: 'Please enter time',
+					okType: 'button-dark'
+
+				});
+				alertBTPopup.then(function(res) {
+					console.log('Time Blank');
+				});
+				return false;
+			}
+
+			if (data.bookingguests == null || data.bookingguests == "") {
+
+				var alertBGPopup = $ionicPopup.alert({
+					title: 'Please enter number of guests.',
+					okType: 'button-dark'
+
+				});
+				alertBGPopup.then(function(res) {
+					console.log('Guests Empty');
+				});
+				return false;
+			}
+
+
 
 			var bookingDetails = {
 				'firstname': userData.firstname,
@@ -486,11 +577,21 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$temp
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
 				},
-				cache: $templateCache
 			}).
 			success(function(response) {
 				console.log("success", response);
-				$scope.booked();
+				var alertPopup = $ionicPopup.alert({
+					title: 'Someone will be in touch shortly to confirm.',
+					okType: 'button-dark'
+
+				});
+				alertPopup.then(function(res) {
+					console.log('Reset Password');
+					$state.go('tab.home', {}, {
+						reload: true,
+						inherit: false
+					});
+				});
 
 			}).
 			error(function(response) {
@@ -499,29 +600,15 @@ chefslounge.controller('BookCtrl', ['$scope', '$http', '$state', 'Dates', '$temp
 				console.log($scope.codeStatus);
 			});
 
-			return false;
 		};
-
-
-
-		//=== Booking Submitted Confirmation ====\\
-		$scope.booked = function() {
-			console.log("booked");
-			$state.go('tab.home', {}, {
-				reload: true,
-				inherit: false
-			});
-		};
-
-
 
 	}
 ])
 
 // === ReviewCtrl
 // =======================================================//
-chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$templateCache',
-	function($scope, $http, $state, Dates, $templateCache) {
+chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$ionicPopup',
+	function($scope, $http, $state, Dates, $ionicPopup) {
 		$scope.review = {};
 		$scope.review.rating = '0';
 
@@ -533,6 +620,47 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$te
 			var user = localStorage.getItem("userData");
 			var userD = JSON.parse(user);
 			var userData = userD;
+
+
+			if (data.rating == null || data.rating == "") {
+
+				var alertBDPopup = $ionicPopup.alert({
+					title: 'Please enter rating',
+					okType: 'button-dark'
+
+				});
+				alertBDPopup.then(function(res) {
+					console.log('Rating Blank');
+				});
+				return false;
+			}
+
+			if (data.rtitle == null || data.rtitle == "") {
+
+				var alertBTPopup = $ionicPopup.alert({
+					title: 'Please enter Title',
+					okType: 'button-dark'
+
+				});
+				alertBTPopup.then(function(res) {
+					console.log('Title Blank');
+				});
+				return false;
+			}
+
+			if (data.message == null || data.message == "") {
+
+				var alertBGPopup = $ionicPopup.alert({
+					title: 'Please enter a message.',
+					okType: 'button-dark'
+
+				});
+				alertBGPopup.then(function(res) {
+					console.log('Message Empty');
+				});
+				return false;
+			}
+
 
 			var reviewDetails = {
 				'firstname': userData.firstname,
@@ -557,11 +685,21 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$te
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
 				},
-				cache: $templateCache
 			}).
 			success(function(response) {
 				console.log("success", response);
-				$scope.reviewed();
+				var alertPopup = $ionicPopup.alert({
+					title: 'Thanks! Review Sent!',
+					okType: 'button-dark'
+
+				});
+				alertPopup.then(function(res) {
+					console.log('Reviewed');
+					$state.go('tab.home', {}, {
+						reload: true,
+						inherit: false
+					});
+				});
 
 
 			}).
@@ -571,28 +709,39 @@ chefslounge.controller('ReviewCtrl', ['$scope', '$http', '$state', 'Dates', '$te
 				console.log($scope.codeStatus);
 			});
 
-			return false;
+
 		};
-
-
-
-		//=== Review Submitted Confirmation ====\\
-		$scope.reviewed = function() {
-			console.log("reviewed");
-			$state.go('tab.home', {}, {
-				reload: true,
-				inherit: false
-			});
-		};
-
 
 
 	}
 ])
 // === ViewReviewCtrl
 // =======================================================//
-chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$templateCache',
-	function($scope, $http, $state, $templateCache) {
+chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$timeout',
+	function($scope, $http, $state, $timeout) {
+
+		$scope.doRefresh = function() {
+
+			console.log('Refreshing!');
+			$timeout(function() {
+
+				$scope.getReviewFn();
+				console.log("Refreshing");
+
+				//Stop the ion-refresher from spinning
+				$scope.$broadcast('scroll.refreshComplete');
+
+			}, 1000);
+
+		};
+
+		$scope.$watch('reviews', function(newVal, oldVal) {
+			if (newVal === oldVal) {
+				return;
+			}
+
+			$scope.reviews = newVal;
+		});
 		//=== getReviewFn() ====\\
 
 		$scope.getReviewFn = function() {
@@ -609,7 +758,6 @@ chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$templat
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				cache: $templateCache
 			}).
 			success(function(response) {
 				console.log(response);
@@ -627,7 +775,6 @@ chefslounge.controller('ViewReviewCtrl', ['$scope', '$http', '$state', '$templat
 			return false;
 		};
 
-		$scope.getReviewFn();
 
 
 	}

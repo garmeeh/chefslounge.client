@@ -1,13 +1,10 @@
-<ion-view title="Menus">
+<ion-view title="Menu">
   <ion-content class="has-header padding">
     <ion-list>
-      <ion-item ng-repeat="item in currentMenu">
+      <ion-item ng-repeat="item in currentMenu" class="item item-icon-left">
 
-      <a class="item item-icon-left">
-      <i class="icon ion-email"></i>
-      {{ item.title }}{{item.price}}
-      </a>
-
+      <i class="icon ion-fork"></i>
+      {{ item.title }} <span style="float:right;" ng-show="{{item.price}}">€{{item.price}}</span>
      
       </ion-item>
     </ion-list>

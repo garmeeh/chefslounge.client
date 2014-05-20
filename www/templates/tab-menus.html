@@ -1,13 +1,12 @@
 <ion-view title="Menus">
   <ion-content class="has-header padding">
     <ion-list>
-      <ion-item ng-repeat="menu in menus">
+      <ion-item ng-repeat="menu in menus" class="item item-icon-left item-icon-right" ng-click="goMenu(menu.menuName)">
 
-      <a class="item item-icon-left" ng-click="goMenu(menu.menuName)">
-      <i class="icon ion-email"></i>
+      
+      <i class="icon ion-document-text"></i>
       {{ menu.menuName }}
-      </a>
-
+      <i class="icon ion-ios7-arrow-right"></i>
      
       </ion-item>
     </ion-list>

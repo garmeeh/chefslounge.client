@@ -1,13 +1,17 @@
-<ion-view title="Special Offers">
+<ion-view title="Special Offers" ng-init="getOfferFn()">
   <ion-content class="has-header padding">
-
+  <ion-refresher on-refresh="doRefresh()"
+                      pulling-text="Pull to refresh..."
+                      refreshing-text="Refreshing!"
+                      refreshing-icon="ion-loading-a">
+      </ion-refresher>
     <div class="padding">
         <p>Check back reguraly to ensure you don't miss out on these exclusive offers. Only customers
       with this app can avail of these offers. </p>
     </div>
 
     <ion-list>
-      <ion-item ng-repeat="offer in offers | orderBy:'-expire'">
+      <ion-item ng-repeat="offer in offers | orderBy:'expire'">
         <h2>{{offer.title}}</h2>
         <p>{{offer.message}}</p>
         <p><b>Expires:</b> {{offer.expire}}</p>
